@@ -1,0 +1,1 @@
+create TABLE Fuu (id varchar(32), name varchar(64));

@@ -1,0 +1,1 @@
+insert into Fuu values ('1', '2');

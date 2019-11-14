@@ -1,0 +1,31 @@
+webclient:
+    一个reactive方式处理HTTP请求， 请求的非阻塞式的客户端
+
+
+支持http底层库
+    ReactorClientHttpConnector
+    JettyClinetHttpConnecteor
+
+
+
+创建webClient
+
+webCLient.create()
+webClient.builder()
+
+发起请求
+  get()
+  post
+  put
+  delete
+  patch
+
+
+获取结果：
+    retrieve  /  exchange
+
+处理Http status
+   onStatus
+
+应答正文
+    bodyToMono
