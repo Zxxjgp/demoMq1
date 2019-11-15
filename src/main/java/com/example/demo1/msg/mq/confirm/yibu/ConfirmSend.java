@@ -1,6 +1,7 @@
 package com.example.demo1.msg.mq.confirm.yibu;
 
 import com.example.demo1.msg.mq.ConnectMqUtils;
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConfirmListener;
 import com.rabbitmq.client.Connection;
@@ -18,20 +19,26 @@ import java.util.concurrent.TimeoutException;
  * @date 2019/11/15  10:41
  */
 public class ConfirmSend {
-    private static final String QUEUE_NAME = "queueue_confirm_5";
+    private static final String QUEUE_NAME = "queueue_confirm_219";
 
     public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
         Connection connect = ConnectMqUtils.getConnect();
         Channel channel = connect.createChannel();
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+
+
+
+        channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+
+
 
         //将channel设置为confirm模式
         channel.confirmSelect();
 
         final SortedSet<Long> confirmSet = Collections.synchronizedSortedSet(new TreeSet<Long>());
 
-        String msg = "hello word -------- confirm——异步消息啊";
+        String msg = "hello word -------- confirm——异步消息啊20666";
 
+        AMQP.BasicProperties properties = new AMQP.BasicProperties().builder().deliveryMode(2).build();
         //监听通道
         channel.addConfirmListener(new ConfirmListener() {
 
@@ -64,7 +71,7 @@ public class ConfirmSend {
 
         while (true) {
             long seqNo = channel.getNextPublishSeqNo();
-            channel.basicPublish("", QUEUE_NAME, null, msg.getBytes());
+            channel.basicPublish("", QUEUE_NAME, properties, msg.getBytes());
             confirmSet.headSet(seqNo);
         }
     }

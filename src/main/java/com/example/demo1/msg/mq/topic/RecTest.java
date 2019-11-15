@@ -65,7 +65,7 @@ public class RecTest {
         //是否关闭自动应答（true 如果消费者端挂了，消息就会删除）
         //false 返回给生产者说消息可以删除了，
         //消息应答默认是打开的 askQus = true
-        boolean askQus = false;
+        boolean askQus = true;
 
         //mq的消息存储在内从中
 

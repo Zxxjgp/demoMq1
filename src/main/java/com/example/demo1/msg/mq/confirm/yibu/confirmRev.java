@@ -18,7 +18,6 @@ public class confirmRev {
         Connection connect = ConnectMqUtils.getConnect();
         Channel channel = connect.createChannel();
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-
         channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel) {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
