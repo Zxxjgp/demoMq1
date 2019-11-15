@@ -78,7 +78,7 @@ spring:
       flush-mode: on-save
       namespace: spring:session
   rabbitmq:
-    addresses: 192.168.1.206:5672,192.168.1.233:5672,192.168.1.219:5672
+    addresses: 192.168.1.206:5672,192.168.1.233:225672,192.168.1.219:225672
     username: admin
     password: admin
 

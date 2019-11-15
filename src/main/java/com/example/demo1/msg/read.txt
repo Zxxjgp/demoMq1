@@ -1,0 +1,59 @@
+在rabbitmq里面只有队列里面具有消息的存储功能
+交换机里面没有消息
+
+
+
+交换机，是讲队列绑定到交换机上面，由交换机将消息发送到消息队列里面去。
+
+好处是：
+  1、一个生产者多个消费者
+  2、每一个消费者都有自己的队列，
+  3、生产没有直接吧消息发送到队列里面去，而是发送到了交换机 ，转发器exchange
+  4、每个队列都要绑定的到交换机的
+  5、生产者发送到 消息经过交换机 达到队列 到达队列就可以被多个消费者消费
+
+
+注册
+
+
+
+交换机，转发器
+
+一方面就是接受生产者的消息，另一方面向队列推送消息
+
+
+routingKey[direct exchange]
+
+direct exchange
+路由模式的队列:
+    发送消息的时候带一个路由key，去进行匹配匹配到就发送到消息队列上面去
+
+
+topic exchange
+将路由键和某模式进行匹配
+# 匹配一个或者多个[good.#]
+* 匹配一个
+
+
+
+
+Rabbitmq的消息确认机制（事务+confirm）
+    在RabbitMq中  我们可以通过持久化数据从 解决rabbitmq服务器异常 的数据丢失问题
+    1、问题：生产者将消息发送出去之后消息有咩有到达rabbitmq服务器(默认情况是不知道的)
+          解决方式：1、事务机制
+                   2、confirm机制
+          ①事务机制（TxSelect txCommit  txRollback）
+                1、TxSelect用户将当前channel设置成transaction机制
+                2、txCommit 提交事务
+                3、txRollback 回滚事务
+          ②confirm最大的好处是异步的
+                开始confrm模式
+                channel.confirmSelect() //设置confirm模式
+                编程模式（3种）
+                    1、普通的方式 waitForConfirms()  穿行的方式
+                    2、批量消息  发一批 waitForConfirms()
+                    3、异步的  waitForConfirms()  有消息火来就会消费调会有一个回调方法(我们只管发送消息，不会管消息怎么样)
+                         解释： channel对象提供的ConfirmLister()回调方法质只包含deliveryTag（当前下次发出的序列号）， 我们需要
+                                自己为每一个channel维护一个unconfirm的消息序号集合， 每publish一条数据， 集合中元素加1，每回调一次handleAck方法
+                                ，unconfirm集合就会删除掉一条（multiple=false）或多条（multiple）记录。从程序运行效率上来看，这个unconfirm
+                                集合最好采用有序集合SortedSet存储结构。

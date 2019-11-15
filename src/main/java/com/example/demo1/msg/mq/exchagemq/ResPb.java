@@ -1,4 +1,4 @@
-package com.example.demo1.msg.mq.ontomany.consumer;
+package com.example.demo1.msg.mq.exchagemq;
 
 import com.example.demo1.msg.mq.ConnectMqUtils;
 import com.rabbitmq.client.*;
@@ -9,30 +9,24 @@ import java.util.concurrent.TimeoutException;
 /**
  * @author jiaoguanping
  * @version 1.0.0
- * @ClassName Rece1
- * @date 2019/11/13  18:58
+ * @ClassName ResPb
+ * @date 2019/11/14  9:27
  */
-public class Rece1 {
-    public static String QUEUEU_NAME = "queue_jgp_1234";
+public class ResPb {
 
+    public static String QUEUEU_NAME = "queue_jgp_123";
+    public static String EXCHAGE_NAME = "exchange_jgp";
     public static void main(String[] args) throws IOException, TimeoutException {
         Connection connect = ConnectMqUtils.getConnect();
         //从连接中获取渠道
         Channel channel = connect.createChannel();
 
         // 消息队列已经定义好了就不允许在进行任何的修改(声明号的消息队列持久化是不可以修改的)
-        boolean durable = true; //消息是否持久化到内从中（true 持久化  false 否）
-
-
-        //创建队列申明
+        boolean durable = false; //消息是否持久化到内从中（true 持久化  false 否）
         channel.queueDeclare(QUEUEU_NAME, durable, false, false, null);
 
-        /**
-         * 消息的持久化
-         * 声明队列
-         * channel.queueDeclare(QUEUEU_NAME, false, false, false, null);
-         *
-         */
+        channel.queueBind(QUEUEU_NAME, EXCHAGE_NAME ,"");
+
 
         channel.basicQos(1); //保证每次只发一个
 

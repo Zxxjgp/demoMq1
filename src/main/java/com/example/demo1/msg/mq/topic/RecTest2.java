@@ -1,4 +1,4 @@
-package com.example.demo1.msg.mq.ontomany.consumer;
+package com.example.demo1.msg.mq.topic;
 
 import com.example.demo1.msg.mq.ConnectMqUtils;
 import com.rabbitmq.client.*;
@@ -9,11 +9,15 @@ import java.util.concurrent.TimeoutException;
 /**
  * @author jiaoguanping
  * @version 1.0.0
- * @ClassName Rece1
- * @date 2019/11/13  18:58
+ * @ClassName RecTest
+ * @date 2019/11/14  20:03
  */
-public class Rece1 {
-    public static String QUEUEU_NAME = "queue_jgp_1234";
+public class RecTest2 {
+
+    public static String QUEUEU_NAME = "test_queue__topic_1";
+    public static String EXCHAGE_NAME = "text_exchange_topic";
+
+    public static String ROUTE_KEY = "goods.#";
 
     public static void main(String[] args) throws IOException, TimeoutException {
         Connection connect = ConnectMqUtils.getConnect();
@@ -21,18 +25,10 @@ public class Rece1 {
         Channel channel = connect.createChannel();
 
         // 消息队列已经定义好了就不允许在进行任何的修改(声明号的消息队列持久化是不可以修改的)
-        boolean durable = true; //消息是否持久化到内从中（true 持久化  false 否）
-
-
-        //创建队列申明
+        boolean durable = false; //消息是否持久化到内从中（true 持久化  false 否）
         channel.queueDeclare(QUEUEU_NAME, durable, false, false, null);
 
-        /**
-         * 消息的持久化
-         * 声明队列
-         * channel.queueDeclare(QUEUEU_NAME, false, false, false, null);
-         *
-         */
+        channel.queueBind(QUEUEU_NAME, EXCHAGE_NAME ,ROUTE_KEY);
 
         channel.basicQos(1); //保证每次只发一个
 
@@ -51,7 +47,13 @@ public class Rece1 {
                 //super.handleDelivery(consumerTag, envelope, properties, body);
                 String s = new String(body);
 
-                System.out.println("receive:"+s);
+                System.out.println("receive:22222222222"+s);
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 //手动返回值高速消费者我已经收到消息了（可以公平分发）
                 channel.basicAck(envelope.getDeliveryTag() , false);

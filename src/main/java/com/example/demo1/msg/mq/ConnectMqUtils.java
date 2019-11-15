@@ -16,7 +16,7 @@ public class ConnectMqUtils {
 
     public static Connection getConnect() throws IOException, TimeoutException {
         ConnectionFactory factory =new ConnectionFactory();
-        factory.setHost("192.168.1.206");
+        factory.setHost("192.168.1.219");
         factory.setPort(5672);
         factory.setVirtualHost("/jgp_db");
 
